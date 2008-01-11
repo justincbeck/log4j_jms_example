@@ -9,13 +9,14 @@ import org.apache.log4j.Logger;
 public class ExceptionThrower extends DelegateProcessor
 {
     private Logger logger = Logger.getLogger(this.getClass());
-    
+
     protected void processNext(Exchange exchange) throws Exception
     {
         Random generator = new Random();
         int exception = generator.nextInt(3);
-        
-        try {
+
+        try
+        {
             switch (exception) {
             case 0:
                 logger.info("No Exceptions here!");
