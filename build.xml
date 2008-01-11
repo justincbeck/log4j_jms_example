@@ -1,0 +1,81 @@
+<project name="log4j-jms-example" default="jar" basedir=".">
+
+	<property name="site" value="log4j-jms-example" />
+	
+	<property file="build.properties" />
+
+	<property name="lib.dir" location="lib" />
+	<property file="${lib.dir}/lib.properties" />
+
+	<property name="base.dir" value="." />
+	<property name="src.dir" value="src" />
+	<property name="conf.dir" value="conf" />
+	<property name="build.dir" value="build" />
+	<property name="web.dir" value="web" />
+	<property name="dist.dir" value="dist" />
+	<property name="lib.dir" value="lib" />
+
+	<path id="activemq.classpath">
+		<fileset dir="${activemq.dir}" includes="*.jar" />
+	</path>
+
+	<path id="camel.classpath">
+		<fileset dir="${camel.dir}" includes="*.jar" />
+	</path>
+
+	<path id="log4j.classpath">
+		<fileset dir="${log4j.dir}" includes="*.jar" />
+	</path>
+
+	<path id="spring.classpath">
+		<fileset dir="${spring.dir}" includes="*.jar" />
+	</path>
+
+	<path id="build.classpath">
+		<path refid="activemq.classpath" />
+		<path refid="camel.classpath" />
+		<path refid="log4j.classpath" />
+		<path refid="spring.classpath" />
+		<pathelement path="${build.dir}" />
+	</path>
+	
+	<target name="prepare">
+		<tstamp />
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${dist.dir}" />
+	</target>
+
+	<target name="compile" depends="prepare">
+		<javac destdir="${build.dir}" deprecation="on" debug="true">
+			<classpath refid="build.classpath" />
+			<src path="${src.dir}" />
+		</javac>
+	</target>
+
+	<target name="jar" depends="compile">
+		<jar jarfile="${dist.dir}/${site}.jar" basedir="${build.dir}" />
+	</target>
+
+	<target name="deploy" depends="jar">
+		<copy file="${conf.dir}/test-ds.xml" todir="${jboss.deploy}" overwrite="true" />
+		<copy file="${conf.dir}/context-spring.xml" todir="${jboss.deploy}" overwrite="true" />
+		<copy file="${dist.dir}/${site}.jar" todir="${jboss.home}/server/log4j-jms-example/lib" overwrite="true" />
+	</target>
+
+	<target name="undeploy" depends="">
+		<delete file="${jboss.deploy}/test-ds.xml" />
+		<delete file="${jboss.deploy}/context-spring.xml" />
+		<delete file="${jboss.home}/server/log4j-jms-example/lib/${site}.jar" />
+	</target>
+
+	<target name="clean">
+		<delete dir="${build.dir}" />
+		<delete dir="${dist.dir}" />
+	</target>
+
+	<target name="clean-jboss">
+		<delete dir="${jboss.home}/server/log4j-jms-example/tmp" />
+		<delete dir="${jboss.home}/server/log4j-jms-example/work" />
+	</target>
+</project>
+

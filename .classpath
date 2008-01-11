@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/log4j-1.2.9/lib/log4j-1.2.9.jar"/>
+	<classpathentry kind="lib" path="lib/spring-2.0.5/lib/ehcache-1.2.4.jar"/>
+	<classpathentry kind="lib" path="lib/spring-2.0.5/lib/spring-mock.jar"/>
+	<classpathentry kind="lib" path="lib/spring-2.0.5/lib/spring-aspects.jar"/>
+	<classpathentry kind="lib" path="lib/spring-2.0.5/lib/spring.jar"/>
+	<classpathentry kind="lib" path="lib/camel-1.2.0/lib/apache-camel-1.2.0.jar"/>
+	<classpathentry kind="lib" path="lib/activemq-4.1.1/lib/activemq-core-4.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/activemq-4.1.1/lib/apache-activemq-4.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/activemq-4.1.1/lib/backport-util-concurrent-2.1.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
