@@ -43,7 +43,7 @@
 	<bean id="connectionFactory"
 		class="org.apache.activemq.spring.ActiveMQConnectionFactory">
 		<property name="brokerURL">
-			<value>tcp://localhost:6969</value>
+			<value>tcp://10-0-0-33.internal.intalgent.com:6969</value>
 		</property>
 	</bean>
 
@@ -76,7 +76,7 @@
 		<property name="useJmx" value="false" />
 		<property name="transportConnectorURIs">
 			<list>
-				<value>tcp://localhost:6969</value>
+				<value>tcp://10-0-0-33.internal.intalgent.com:6969</value>
 			</list>
 		</property>
 		<property name="persistenceAdapter" ref="persistenceAdapter" />
