@@ -24,6 +24,13 @@
 		</property>
 	</bean>
 
+	<bean id="jmsDataSource"
+		class="org.springframework.jndi.JndiObjectFactoryBean">
+		<property name="jndiName">
+			<value>java:/mysql-DS</value>
+		</property>
+	</bean>
+
 	<bean id="exceptionThrower"
 		class="com.beckproduct.ExceptionThrower" />
 
@@ -81,26 +88,12 @@
 
 	<bean name="persistenceAdapter"
 		class="org.apache.activemq.store.PersistenceAdapterFactoryBean">
-		<property name="dataSource" ref="mysql-ds" />
+		<property name="dataSource" ref="jmsDataSource" />
 		<property name="createTablesOnStartup" value="true" />
 		<property name="dataDirectory">
 			<value>../active-mq/test</value>
 		</property>
 		<property name="journalLogFiles" value="5" />
 		<property name="useDatabaseLock" value="false" />
-	</bean>
-
-	<bean name="mysql-ds"
-		class="org.apache.commons.dbcp.BasicDataSource"
-		destroy-method="close">
-		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url">
-			<value>
-				jdbc:mysql://localhost/exceptions_jms?relaxAutoCommit=true
-			</value>
-		</property>
-		<property name="username" value="root" />
-		<property name="password" value="" />
-		<property name="poolPreparedStatements" value="true" />
 	</bean>
 </beans>
