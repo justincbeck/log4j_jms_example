@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.apache.log4j.net;
+package com.beckproduct.log4j.jms.net;
 
 import javax.jms.MessageProducer;
 import javax.jms.ObjectMessage;
