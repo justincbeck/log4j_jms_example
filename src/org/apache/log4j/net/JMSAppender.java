@@ -104,15 +104,16 @@ public class JMSAppender extends AppenderSkeleton
 
         try
         {
-            queueConnectionFactory = new ActiveMQConnectionFactory("tcp://fucker:6969");
+            queueConnectionFactory = new ActiveMQConnectionFactory("tcp://fest.local:6969");
+            
             logger.info("About to create QueueConnection.");
             queueConnection = queueConnectionFactory.createQueueConnection();
 
             logger.info("Creating QueueSession, transactional, " + "in AUTO_ACKNOWLEDGE mode.");
-            queueSession = queueConnection.createQueueSession(true, Session.AUTO_ACKNOWLEDGE);
+            queueSession = queueConnection.createQueueSession(true, Session.SESSION_TRANSACTED);
 
             logger.info("About to create Queue.");
-            Queue queue = queueSession.createQueue("queue/exceptionQueue");
+            Queue queue = queueSession.createQueue("exceptionQueue");
 
             logger.info("Creating QueueSender.");
             queueSender = queueSession.createSender(queue);
@@ -203,11 +204,10 @@ public class JMSAppender extends AppenderSkeleton
         {
             logger.info("About to send message!");
             
-            producer = queueSession.createProducer(queueSender.getDestination());
             ObjectMessage msg = queueSession.createObjectMessage();
             msg.setObject(event);
-            producer.send(msg);
-            
+
+            queueSender.send(msg);
             queueSession.commit();
             
             logger.info("Message sent!");
