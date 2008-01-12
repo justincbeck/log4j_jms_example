@@ -1,23 +1,5 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.beckproduct.log4j.jms.net;
 
-import javax.jms.MessageProducer;
 import javax.jms.ObjectMessage;
 import javax.jms.Queue;
 import javax.jms.QueueConnection;
@@ -31,7 +13,7 @@ import javax.naming.NamingException;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.log4j.AppenderSkeleton;
-import org.apache.log4j.Logger;
+import org.apache.log4j.helpers.LogLog;
 import org.apache.log4j.spi.LoggingEvent;
 
 public class JMSAppender extends AppenderSkeleton
@@ -39,44 +21,39 @@ public class JMSAppender extends AppenderSkeleton
     boolean delayedActivation;
 
     boolean activated;
+    
+    String brokerURL;
 
     QueueConnection queueConnection;
 
     QueueSession queueSession;
 
     QueueSender queueSender;
-    
-    MessageProducer producer;
-
-    Logger logger = Logger.getLogger(this.getClass());
 
     public JMSAppender()
     {
     }
 
-    /**
-     * The <b>DelayedActivation</b> option takes a boolean value. If
-     * <code>delayedActivation</code> is <code>true</code> the appender
-     * options are activated when <code>append</code> is called for the first
-     * time.
-     */
     public void setDelayedActivation(boolean delayedActivation)
     {
         this.delayedActivation = delayedActivation;
     }
 
-    /**
-     * Returns the value of the <b>DelayedActivation</b> option.
-     */
     public boolean getDelayedActivation()
     {
         return delayedActivation;
     }
+    
+    public void setBrokerURL(String brokerURL)
+    {
+        this.brokerURL = brokerURL;
+    }
+    
+    public String getBrokerURL()
+    {
+        return brokerURL;
+    }
 
-    /**
-     * Options are activated and become effective after calling this method when
-     * <code>DelayedActivation</code> is <code>false</code>.
-     */
     public void activateOptions()
     {
         if (!delayedActivation)
@@ -85,10 +62,6 @@ public class JMSAppender extends AppenderSkeleton
         }
     }
 
-    /**
-     * Options are activated and become effective only after calling this
-     * method.
-     */
     protected void internalActivateOptions()
     {
         if (activated)
@@ -104,26 +77,26 @@ public class JMSAppender extends AppenderSkeleton
 
         try
         {
-            queueConnectionFactory = new ActiveMQConnectionFactory("tcp://fest.local:6969");
-            
-            logger.info("About to create QueueConnection.");
+            queueConnectionFactory = new ActiveMQConnectionFactory(brokerURL);
+
+            LogLog.debug("About to create QueueConnection.");
             queueConnection = queueConnectionFactory.createQueueConnection();
 
-            logger.info("Creating QueueSession, transactional, " + "in AUTO_ACKNOWLEDGE mode.");
+            LogLog.debug("Creating QueueSession, transactional, " + "in AUTO_ACKNOWLEDGE mode.");
             queueSession = queueConnection.createQueueSession(true, Session.SESSION_TRANSACTED);
 
-            logger.info("About to create Queue.");
+            LogLog.debug("About to create Queue.");
             Queue queue = queueSession.createQueue("exceptionQueue");
 
-            logger.info("Creating QueueSender.");
+            LogLog.debug("Creating QueueSender.");
             queueSender = queueSession.createSender(queue);
-            
-            logger.info("Starting QueueConnection.");
+
+            LogLog.debug("Starting QueueConnection.");
             queueConnection.start();
         }
         catch (Exception e)
         {
-            logger.error("Error while activating options for appender named [" + name + "].", e);
+            LogLog.error("Error while activating options for appender named [" + name + "].", e);
         }
     }
 
@@ -135,7 +108,7 @@ public class JMSAppender extends AppenderSkeleton
         }
         catch (NameNotFoundException e)
         {
-            logger.error("Could not find name [" + name + "].", e);
+            LogLog.error("Could not find name [" + name + "].", e);
             throw e;
         }
     }
@@ -164,7 +137,7 @@ public class JMSAppender extends AppenderSkeleton
 
         if (fail != null)
         {
-            logger.error(fail + " for JMSAppender named [" + name + "].");
+            LogLog.error(fail + " for JMSAppender named [" + name + "].");
             return false;
         }
         else
@@ -173,26 +146,15 @@ public class JMSAppender extends AppenderSkeleton
         }
     }
 
-    /**
-     * Close this JMSAppender. Closing releases all resources used by the
-     * appender. A closed appender cannot be re-opened.
-     */
     public synchronized void close()
     {
-        // The synchronized modifier avoids concurrent append and close
-        // operations
-
         if (this.closed)
             return;
 
-        logger.info("Closing appender [" + name + "].");
+        LogLog.debug("Closing appender [" + name + "].");
         this.closed = true;
     }
 
-    /**
-     * This method called by {@link AppenderSkeleton#doAppend} method to do most
-     * of the real appending work.
-     */
     public void append(LoggingEvent event)
     {
         if (!checkEntryConditions(event))
@@ -202,26 +164,22 @@ public class JMSAppender extends AppenderSkeleton
 
         try
         {
-            logger.info("About to send message!");
-            
+            LogLog.debug("About to send message!");
+
             ObjectMessage msg = queueSession.createObjectMessage();
             msg.setObject(event);
 
             queueSender.send(msg);
             queueSession.commit();
-            
-            logger.info("Message sent!");
+
+            LogLog.debug("Message sent!");
         }
         catch (Exception e)
         {
-            logger.error("Could not publish message in JMSAppender [" + name + "].", e);
+            LogLog.error("Could not publish message in JMSAppender [" + name + "].", e);
         }
     }
 
-    /**
-     * The JMSAppender sends serialized events and consequently does not require
-     * a layout.
-     */
     public boolean requiresLayout()
     {
         return false;
