@@ -17,16 +17,16 @@ public class ExceptionThrower extends DelegateProcessor
 
         try
         {
-            switch (exception) {
-            case 0:
-                logger.info("No Exceptions here!");
-                break;
-            case 1:
-                logger.warn("Whoa! That was close Mister!");
-                break;
-            case 2:
+//            switch (exception) {
+//            case 0:
+//                logger.info("No Exceptions here!");
+//                break;
+//            case 1:
+//                logger.warn("Whoa! That was close Mister!");
+//                break;
+//            case 2:
                 throw new Exception("Boom! That's not good!");
-            }
+//            }
         }
         catch (Exception e)
         {
