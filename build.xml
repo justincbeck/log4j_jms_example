@@ -49,7 +49,6 @@
 		<javac destdir="${build.dir}" deprecation="on" debug="true">
 			<classpath refid="build.classpath" />
 			<src path="${src.dir}" />
-			<exclude name="org/**"/>
 		</javac>
 	</target>
 
