@@ -23,6 +23,14 @@
 		<fileset dir="${camel.dir}" includes="*.jar" />
 	</path>
 
+	<path id="hibernate.classpath">
+		<fileset dir="${hibernate.dir}" includes="*.jar" />
+	</path>
+
+	<path id="hibernate-annotations.classpath">
+		<fileset dir="${hibernate-annotations.dir}" includes="*.jar" />
+	</path>
+
 	<path id="log4j.classpath">
 		<fileset dir="${log4j.dir}" includes="*.jar" />
 	</path>
@@ -34,6 +42,8 @@
 	<path id="build.classpath">
 		<path refid="activemq.classpath" />
 		<path refid="camel.classpath" />
+		<path refid="hibernate.classpath" />
+		<path refid="hibernate-annotations.classpath" />
 		<path refid="log4j.classpath" />
 		<path refid="spring.classpath" />
 		<pathelement path="${build.dir}" />
