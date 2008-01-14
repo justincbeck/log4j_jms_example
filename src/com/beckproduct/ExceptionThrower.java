@@ -10,6 +10,7 @@ public class ExceptionThrower extends DelegateProcessor
 {
     private Logger logger = Logger.getLogger(this.getClass());
 
+    @Override
     protected void processNext(Exchange exchange) throws Exception
     {
         Random generator = new Random();
