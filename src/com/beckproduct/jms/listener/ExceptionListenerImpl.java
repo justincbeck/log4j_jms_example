@@ -7,6 +7,7 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.spi.LoggingEvent;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -30,7 +31,7 @@ public class ExceptionListenerImpl extends HibernateDaoSupport implements Messag
             LogEntry entry = new LogEntry();
             entry.setLogLevel(loggingEvent.getLevel().toString());
             entry.setHostName(InetAddress.getLocalHost().getHostName());
-            entry.setStackTrace(loggingEvent);
+            entry.setStacktrace(StringUtils.join(loggingEvent.getThrowableStrRep(), "\n"));
             entry.setDate(new Date(loggingEvent.timeStamp));
             
             this.create(entry);
