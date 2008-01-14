@@ -34,7 +34,6 @@
 	<bean id="exceptionThrower"
 		class="com.beckproduct.ExceptionThrower" />
 
-<!-- 		
 	<bean id="autoProxyCreator"
 		class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
 		<property name="interceptorNames">
@@ -44,7 +43,7 @@
 		</property>
 		<property name="beanNames">
 			<list>
-				<value>logEntryRepository</value>
+				<value>exceptionListener</value>
 			</list>
 		</property>
 	</bean>
@@ -56,7 +55,7 @@
 		</property>
 		<property name="transactionAttributes">
 			<props>
-				<prop key="logEntryRepository">PROPAGATION_REQUIRED</prop>
+				<prop key="exceptionListener">PROPAGATION_REQUIRED</prop>
 			</props>
 		</property>
 	</bean>
@@ -89,19 +88,11 @@
 		</property>
 	</bean>
 
-	<bean id="logEntryRepository"
-		class="com.beckproduct.repository.LogEntryRepository">
+	<bean id="exceptionListener"
+		class="com.beckproduct.jms.listener.ExceptionListenerImpl">
 		<property name="sessionFactory">
 			<ref local="annotationSessionFactoryBean" />
 		</property>
-	</bean>
- -->
-
-	<bean id="exceptionListener"
-		class="com.beckproduct.jms.listener.ExceptionListenerImpl">
-<!-- 		<property name="logEntryRepository">
-			<ref local="logEntryRepository" />
-		</property> -->
 	</bean>
 
 	<bean id="exceptionQueue"
@@ -124,23 +115,6 @@
 		<property name="destination" ref="exceptionQueue" />
 		<property name="messageListener" ref="exceptionListener" />
 	</bean>
-
-<!-- 
-	<bean id="exceptionTemplate"
-		class="org.springframework.jms.core.JmsTemplate">
-		<property name="connectionFactory">
-			<bean
-				class="org.springframework.jms.connection.SingleConnectionFactory">
-				<property name="targetConnectionFactory">
-					<ref local="connectionFactory" />
-				</property>
-			</bean>
-		</property>
-		<property name="defaultDestination">
-			<ref local="exceptionQueue" />
-		</property>
-	</bean>
- -->
 
 	<bean id="broker" class="org.apache.activemq.broker.BrokerService"
 		init-method="start" destroy-method="stop">
