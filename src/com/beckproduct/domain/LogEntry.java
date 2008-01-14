@@ -7,7 +7,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import org.apache.log4j.spi.LoggingEvent;
 import org.hibernate.annotations.Entity;
 import org.hibernate.annotations.Table;
 
@@ -21,16 +20,16 @@ public class LogEntry
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     
-    @Column(name = "logLevel", nullable = false, updatable = true, insertable = true, columnDefinition = "VARCHAR(10)")
+    @Column(name = "logLevel", nullable = false, updatable = false, insertable = true, columnDefinition = "VARCHAR(10)")
     private String logLevel;
     
-    @Column(name = "hostName", nullable = false, updatable = true, insertable = true, columnDefinition = "VARCHAR(50)")
+    @Column(name = "hostName", nullable = false, updatable = false, insertable = true, columnDefinition = "VARCHAR(50)")
     private String hostName;
     
-    @Column(name = "event", nullable = false, updatable = true, insertable = true, columnDefinition = "BLOB")
-    private LoggingEvent event;
+    @Column(name = "stacktrace", nullable = true, updatable = false, insertable = true, columnDefinition = "TEXT")
+    private String stacktrace;
     
-    @Column(name = "date", nullable = false, updatable = true, insertable = true, columnDefinition = "DATE")
+    @Column(name = "date", nullable = false, updatable = false, insertable = true, columnDefinition = "TIMESTAMP")
     private Date date;
     
     @Column(name = "reviewed", nullable = false, updatable = true, insertable = true, columnDefinition = "TINYINT(1)")
@@ -88,19 +87,19 @@ public class LogEntry
     }
 
     /**
-     * @return the stackTrace
+     * @return the stacktrace
      */
-    public LoggingEvent getEvent()
+    public String getStacktrace()
     {
-        return event;
+        return stacktrace;
     }
 
     /**
-     * @param stackTrace the stackTrace to set
+     * @param stacktrace the stacktrace to set
      */
-    public void setStackTrace(LoggingEvent event)
+    public void setStacktrace(String stacktrace)
     {
-        this.event = event;
+        this.stacktrace = stacktrace;
     }
 
     /**
