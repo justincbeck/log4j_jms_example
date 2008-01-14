@@ -35,7 +35,7 @@
 		class="com.beckproduct.ExceptionThrower" />
 
 	<bean id="exceptionListener"
-		class="com.beckproduct.jms.ExceptionListenerImpl" />
+		class="com.beckproduct.jms.listener.ExceptionListenerImpl" />
 
 	<bean id="exceptionQueue"
 		class="org.apache.activemq.command.ActiveMQQueue">
