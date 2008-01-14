@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import org.apache.log4j.spi.LoggingEvent;
 import org.hibernate.annotations.Entity;
 import org.hibernate.annotations.Table;
 
@@ -16,9 +17,9 @@ import org.hibernate.annotations.Table;
 public class LogEntry
 {
     @Id
-    @Column(name = "entryId")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private String id;
+    private Integer id;
     
     @Column(name = "logLevel", nullable = false, updatable = true, insertable = true, columnDefinition = "VARCHAR(10)")
     private String logLevel;
@@ -26,8 +27,8 @@ public class LogEntry
     @Column(name = "hostName", nullable = false, updatable = true, insertable = true, columnDefinition = "VARCHAR(50)")
     private String hostName;
     
-    @Column(name = "stackTrace", nullable = false, updatable = true, insertable = true, columnDefinition = "TEXT")
-    private String[] stackTrace;
+    @Column(name = "event", nullable = false, updatable = true, insertable = true, columnDefinition = "BLOB")
+    private LoggingEvent event;
     
     @Column(name = "date", nullable = false, updatable = true, insertable = true, columnDefinition = "DATE")
     private Date date;
@@ -41,7 +42,7 @@ public class LogEntry
     /**
      * @return the id
      */
-    public String getId()
+    public Integer getId()
     {
         return id;
     }
@@ -49,7 +50,7 @@ public class LogEntry
     /**
      * @param id the id to set
      */
-    public void setId(String id)
+    public void setId(Integer id)
     {
         this.id = id;
     }
@@ -89,17 +90,17 @@ public class LogEntry
     /**
      * @return the stackTrace
      */
-    public String[] getStackTrace()
+    public LoggingEvent getEvent()
     {
-        return stackTrace;
+        return event;
     }
 
     /**
      * @param stackTrace the stackTrace to set
      */
-    public void setStackTrace(String[] stackTrace)
+    public void setStackTrace(LoggingEvent event)
     {
-        this.stackTrace = stackTrace;
+        this.event = event;
     }
 
     /**
