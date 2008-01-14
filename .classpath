@@ -14,37 +14,14 @@
 	<classpathentry kind="lib" path="lib/hibernate-annotations-3.3.0/lib/ejb3-persistence.jar"/>
 	<classpathentry kind="lib" path="lib/hibernate-annotations-3.3.0/lib/hibernate-annotations.jar"/>
 	<classpathentry kind="lib" path="lib/hibernate-annotations-3.3.0/lib/hibernate-commons-annotations.jar"/>
-	<classpathentry kind="lib" path="lib/hibernate-3.2.5.GA/lib/antlr-2.7.6.jar"/>
-	<classpathentry kind="lib" path="lib/hibernate-3.2.5.GA/lib/asm.jar"/>
-	<classpathentry kind="lib" path="lib/hibernate-3.2.5.GA/lib/asm-attrs.jar"/>
-	<classpathentry kind="lib" path="lib/hibernate-3.2.5.GA/lib/c3p0-0.9.1.jar"/>
-	<classpathentry kind="lib" path="lib/hibernate-3.2.5.GA/lib/cglib-2.1.3.jar"/>
-	<classpathentry kind="lib" path="lib/hibernate-3.2.5.GA/lib/checkstyle-all.jar"/>
-	<classpathentry kind="lib" path="lib/hibernate-3.2.5.GA/lib/cleanimports.jar"/>
-	<classpathentry kind="lib" path="lib/hibernate-3.2.5.GA/lib/commons-collections-2.1.1.jar"/>
-	<classpathentry kind="lib" path="lib/hibernate-3.2.5.GA/lib/commons-logging-1.0.4.jar"/>
-	<classpathentry kind="lib" path="lib/hibernate-3.2.5.GA/lib/concurrent-1.3.2.jar"/>
-	<classpathentry kind="lib" path="lib/hibernate-3.2.5.GA/lib/connector.jar"/>
-	<classpathentry kind="lib" path="lib/hibernate-3.2.5.GA/lib/dom4j-1.6.1.jar"/>
-	<classpathentry kind="lib" path="lib/hibernate-3.2.5.GA/lib/ehcache-1.2.3.jar"/>
-	<classpathentry kind="lib" path="lib/hibernate-3.2.5.GA/lib/hibernate3.jar"/>
-	<classpathentry kind="lib" path="lib/hibernate-3.2.5.GA/lib/jaas.jar"/>
-	<classpathentry kind="lib" path="lib/hibernate-3.2.5.GA/lib/jacc-1_0-fr.jar"/>
-	<classpathentry kind="lib" path="lib/hibernate-3.2.5.GA/lib/javassist.jar"/>
-	<classpathentry kind="lib" path="lib/hibernate-3.2.5.GA/lib/jaxen-1.1-beta-7.jar"/>
-	<classpathentry kind="lib" path="lib/hibernate-3.2.5.GA/lib/jboss-cache.jar"/>
-	<classpathentry kind="lib" path="lib/hibernate-3.2.5.GA/lib/jboss-common.jar"/>
-	<classpathentry kind="lib" path="lib/hibernate-3.2.5.GA/lib/jboss-jmx.jar"/>
-	<classpathentry kind="lib" path="lib/hibernate-3.2.5.GA/lib/jboss-system.jar"/>
-	<classpathentry kind="lib" path="lib/hibernate-3.2.5.GA/lib/jdbc2_0-stdext.jar"/>
-	<classpathentry kind="lib" path="lib/hibernate-3.2.5.GA/lib/jgroups-2.2.8.jar"/>
-	<classpathentry kind="lib" path="lib/hibernate-3.2.5.GA/lib/jta.jar"/>
-	<classpathentry kind="lib" path="lib/hibernate-3.2.5.GA/lib/oscache-2.1.jar"/>
-	<classpathentry kind="lib" path="lib/hibernate-3.2.5.GA/lib/proxool-0.8.3.jar"/>
-	<classpathentry kind="lib" path="lib/hibernate-3.2.5.GA/lib/swarmcache-1.0rc2.jar"/>
-	<classpathentry kind="lib" path="lib/hibernate-3.2.5.GA/lib/syndiag2.jar"/>
-	<classpathentry kind="lib" path="lib/hibernate-3.2.5.GA/lib/versioncheck.jar"/>
-	<classpathentry kind="lib" path="lib/hibernate-3.2.5.GA/lib/xerces-2.6.2.jar"/>
-	<classpathentry kind="lib" path="lib/hibernate-3.2.5.GA/lib/xml-apis.jar"/>
+	<classpathentry kind="lib" path="lib/hibernate-3.2.3/lib/antlr-2.7.6.jar"/>
+	<classpathentry kind="lib" path="lib/hibernate-3.2.3/lib/asm.jar"/>
+	<classpathentry kind="lib" path="lib/hibernate-3.2.3/lib/asm-attrs.jar"/>
+	<classpathentry kind="lib" path="lib/hibernate-3.2.3/lib/cglib-2.1.3.jar"/>
+	<classpathentry kind="lib" path="lib/hibernate-3.2.3/lib/commons-collections-2.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/hibernate-3.2.3/lib/dom4j-1.6.1.jar"/>
+	<classpathentry kind="lib" path="lib/hibernate-3.2.3/lib/hibernate3.jar"/>
+	<classpathentry kind="lib" path="lib/hibernate-3.2.3/lib/odmg-3.0.jar"/>
+	<classpathentry kind="lib" path="lib/hibernate-3.2.3/lib/oscache-2.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
