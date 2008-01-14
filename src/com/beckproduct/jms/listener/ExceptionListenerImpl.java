@@ -1,4 +1,4 @@
-package com.beckproduct.jms;
+package com.beckproduct.jms.listener;
 
 import javax.jms.Message;
 import javax.jms.MessageListener;

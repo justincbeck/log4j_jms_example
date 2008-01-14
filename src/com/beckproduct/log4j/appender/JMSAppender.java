@@ -1,4 +1,4 @@
-package com.beckproduct.log4j.jms.net;
+package com.beckproduct.log4j.appender;
 
 import javax.jms.ObjectMessage;
 import javax.jms.Queue;
