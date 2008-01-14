@@ -30,7 +30,7 @@ public class ExceptionThrower extends DelegateProcessor
         }
         catch (Exception e)
         {
-            logger.error(e.getMessage());
+            logger.error(e.getMessage(), e);
         }
     }
 }
