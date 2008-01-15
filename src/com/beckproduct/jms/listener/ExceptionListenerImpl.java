@@ -10,16 +10,15 @@ import javax.jms.ObjectMessage;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.spi.LoggingEvent;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
-import org.springframework.transaction.PlatformTransactionManager;
 
 import com.beckproduct.domain.LogEntry;
+import com.beckproduct.repository.ILogEntryRepository;
 
-public class ExceptionListenerImpl extends HibernateDaoSupport implements MessageListener
+public class ExceptionListenerImpl implements MessageListener
 {
     private Logger logger = Logger.getLogger(this.getClass());
     
-    private PlatformTransactionManager transactionManager;
+    private ILogEntryRepository repository;
     
     public void onMessage(Message jmsMessage)
     {
@@ -34,7 +33,7 @@ public class ExceptionListenerImpl extends HibernateDaoSupport implements Messag
             entry.setStacktrace(StringUtils.join(loggingEvent.getThrowableStrRep(), "\n"));
             entry.setDate(new Date(loggingEvent.timeStamp));
             
-            this.create(entry);
+            repository.create(entry);
         }
         catch (Exception e)
         {
@@ -42,25 +41,19 @@ public class ExceptionListenerImpl extends HibernateDaoSupport implements Messag
         }
     }
     
-    private void create(LogEntry entry)
+    /**
+     * @return the repository
+     */
+    public ILogEntryRepository getRepository()
     {
-        getHibernateTemplate().saveOrUpdate(entry);
-        getHibernateTemplate().flush();
+        return repository;
     }
 
     /**
-     * @return the transactionManager
+     * @param repository the repository to set
      */
-    public PlatformTransactionManager getTransactionManager()
+    public void setRepository(ILogEntryRepository repository)
     {
-        return transactionManager;
-    }
-
-    /**
-     * @param transactionManager the transactionManager to set
-     */
-    public void setTransactionManager(PlatformTransactionManager transactionManager)
-    {
-        this.transactionManager = transactionManager;
+        this.repository = repository;
     }
 }
