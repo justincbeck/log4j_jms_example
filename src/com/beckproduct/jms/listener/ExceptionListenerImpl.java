@@ -30,7 +30,8 @@ public class ExceptionListenerImpl implements MessageListener
             LogEntry entry = new LogEntry();
             entry.setLogLevel(loggingEvent.getLevel().toString());
             entry.setHostName(InetAddress.getLocalHost().getHostName());
-            entry.setStacktrace(StringUtils.join(loggingEvent.getThrowableStrRep(), "\n"));
+            if (loggingEvent.getThrowableStrRep() != null)
+                entry.setStacktrace(StringUtils.join(loggingEvent.getThrowableStrRep(), "\n"));
             entry.setDate(new Date(loggingEvent.timeStamp));
             
             repository.create(entry);
