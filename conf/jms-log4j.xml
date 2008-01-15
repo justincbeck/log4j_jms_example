@@ -114,7 +114,7 @@
 
    <!-- Log events to JMS queue -->
    <appender name="QUEUE" class="com.beckproduct.log4j.appender.JMSAppender">
-     <param name="Threshold" value="ERROR"/>
+     <param name="Threshold" value="WARN"/>
      <param name="DelayedActivation" value="true"/>
      <param name="BrokerURL" value="tcp://fest.local:6969"/>
    </appender>
