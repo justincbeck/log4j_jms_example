@@ -30,7 +30,6 @@ public class EmailService implements IEmailService
         try
         {
             InternetAddress sender = new InternetAddress("exceptions@meddius.com");
-//            InternetAddress recipient = new InternetAddress("support@meddius.com");
             InternetAddress recipient = new InternetAddress("justin.beck@intalgent.com");
 
             MimeMessage message = mailSender.createMimeMessage();
@@ -42,7 +41,8 @@ public class EmailService implements IEmailService
             StringBuffer content = new StringBuffer();
             content.append("New Exceptions have been captured:\n\n");
             content.append("There are " + nonNotified + " new Exceptions since the last report email.\n");
-            content.append("There are " + nonReviewed + " Exceptions that have not been reviewed.\n");
+            content.append("There are " + nonReviewed + " Exceptions that have not been reviewed.\n\n");
+            content.append("Message generated at: " + new Date());
             message.setContent(content.toString(), "text/plain");
             mailSender.send(message);
         }
