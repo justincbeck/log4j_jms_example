@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="src/main"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.9/lib/log4j-1.2.9.jar"/>
 	<classpathentry kind="lib" path="lib/spring-2.0.5/lib/ehcache-1.2.4.jar"/>
