@@ -9,6 +9,7 @@
 
 	<property name="base.dir" value="." />
 	<property name="src.dir" value="src" />
+	<property name="src.main.dir" value="${src.dir}/main" />
 	<property name="conf.dir" value="conf" />
 	<property name="build.dir" value="build" />
 	<property name="web.dir" value="web" />
@@ -68,7 +69,7 @@
 	<target name="compile" depends="prepare">
 		<javac destdir="${build.dir}" deprecation="on" debug="true">
 			<classpath refid="build.classpath" />
-			<src path="${src.dir}" />
+			<src path="${src.main.dir}" />
 		</javac>
 	</target>
 
@@ -77,14 +78,12 @@
 	</target>
 
 	<target name="deploy" depends="jar">
-		<copy file="${conf.dir}/test-ds.xml" todir="${jboss.deploy}" overwrite="true" />
 		<copy file="${conf.dir}/context-spring.xml" todir="${jboss.deploy}" overwrite="true" />
 		<copy file="${conf.dir}/jms-log4j.xml" tofile="${jboss.home}/server/log4j-jms-example/conf/log4j.xml" overwrite="true" />
 		<copy file="${dist.dir}/${site}.jar" todir="${jboss.home}/server/log4j-jms-example/lib" overwrite="true" />
 	</target>
 	
 	<target name="undeploy" depends="">
-		<delete file="${jboss.deploy}/test-ds.xml" />
 		<delete file="${jboss.deploy}/context-spring.xml" />
 		<copy file="${conf.dir}/log4j.xml" tofile="${jboss.home}/server/log4j-jms-example/conf/log4j.xml" overwrite="true" />
 		<delete file="${jboss.home}/server/log4j-jms-example/lib/${site}.jar" />
