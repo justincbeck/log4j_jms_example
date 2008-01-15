@@ -5,17 +5,28 @@ import org.apache.camel.processor.DelegateProcessor;
 import org.apache.log4j.Logger;
 
 import com.beckproduct.repository.ILogEntryRepository;
+import com.beckproduct.service.IEmailService;
 
 public class ExceptionChecker extends DelegateProcessor
 {
     private Logger logger = Logger.getLogger(this.getClass());
-    
+
     private ILogEntryRepository repository;
+
+    private IEmailService service;
 
     @Override
     protected void processNext(Exchange exchange) throws Exception
     {
-        logger.info("Checking for exceptions");
+        int nonNotified = repository.getNonNotifiedCount();
+
+        int nonReviewed = repository.getNonReviewedCount();
+
+        if (nonNotified > 0)
+        {
+            logger.info("Sending notification of new Exceptions.");
+            service.sendNotification(nonNotified, nonReviewed);
+        }
     }
 
     /**
@@ -27,10 +38,28 @@ public class ExceptionChecker extends DelegateProcessor
     }
 
     /**
-     * @param repository the repository to set
+     * @param repository
+     *            the repository to set
      */
     public void setRepository(ILogEntryRepository repository)
     {
         this.repository = repository;
+    }
+
+    /**
+     * @return the service
+     */
+    public IEmailService getService()
+    {
+        return service;
+    }
+
+    /**
+     * @param service
+     *            the service to set
+     */
+    public void setService(IEmailService service)
+    {
+        this.service = service;
     }
 }
