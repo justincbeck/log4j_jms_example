@@ -9,11 +9,15 @@
                                                 http://activemq.apache.org/camel/schema/spring
                                                 http://activemq.apache.org/camel/schema/spring/camel-spring.xsd">
 
-	<camelContext id="camel"
+	<camelContext id="camelQuartz"
 		xmlns="http://activemq.apache.org/camel/schema/spring">
 		<route>
-			<from uri="quartz://groupName/timerName/0/*/*/*/*/$" />
+			<from uri="quartz://meddius/exceptionThrower/0/*/*/*/*/$" />
 			<process ref="exceptionThrower" />
+		</route>
+		<route>
+			<from uri="quartz://meddius/exceptionChecker/0/0,5,10,15,20,25,30,35,40,45,50,55/*/*/*/$" />
+			<process ref="exceptionChecker" />
 		</route>
 	</camelContext>
 
@@ -32,7 +36,10 @@
 	</bean>
 
 	<bean id="exceptionThrower"
-		class="com.beckproduct.ExceptionThrower" />
+		class="com.beckproduct.camel.processor.ExceptionThrower" />
+
+	<bean id="exceptionChecker"
+		class="com.beckproduct.camel.processor.ExceptionChecker" />
 
 	<bean id="autoProxyCreator"
 		class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
