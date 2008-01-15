@@ -39,7 +39,11 @@
 		class="com.beckproduct.camel.processor.ExceptionThrower" />
 
 	<bean id="exceptionChecker"
-		class="com.beckproduct.camel.processor.ExceptionChecker" />
+		class="com.beckproduct.camel.processor.ExceptionChecker">
+		<property name="repository">
+			<ref local="logEntryRepository" />
+		</property>
+	</bean>
 
 	<bean id="autoProxyCreator"
 		class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
@@ -50,7 +54,7 @@
 		</property>
 		<property name="beanNames">
 			<list>
-				<value>exceptionListener</value>
+				<value>logEntryRepository</value>
 			</list>
 		</property>
 	</bean>
@@ -62,7 +66,9 @@
 		</property>
 		<property name="transactionAttributes">
 			<props>
-				<prop key="exceptionListener">PROPAGATION_REQUIRED</prop>
+				<prop key="logEntryRepository">
+					PROPAGATION_REQUIRED
+				</prop>
 			</props>
 		</property>
 	</bean>
@@ -97,6 +103,13 @@
 
 	<bean id="exceptionListener"
 		class="com.beckproduct.jms.listener.ExceptionListenerImpl">
+		<property name="repository">
+			<ref local="logEntryRepository" />
+		</property>
+	</bean>
+
+	<bean id="logEntryRepository"
+		class="com.beckproduct.repository.LogEntryRepository">
 		<property name="sessionFactory">
 			<ref local="annotationSessionFactoryBean" />
 		</property>
@@ -145,5 +158,33 @@
 		</property>
 		<property name="journalLogFiles" value="5" />
 		<property name="useDatabaseLock" value="false" />
+	</bean>
+
+	<bean name="meddius-ds"
+		class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url">
+			<value>
+				jdbc:mysql://localhost/exceptions?relaxAutoCommit=true
+			</value>
+		</property>
+		<property name="username" value="root" />
+		<property name="password" value="" />
+		<property name="poolPreparedStatements" value="true" />
+	</bean>
+
+	<bean name="activemq-ds"
+		class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url">
+			<value>
+				jdbc:mysql://localhost/exceptions_jms?relaxAutoCommit=true
+			</value>
+		</property>
+		<property name="username" value="root" />
+		<property name="password" value="" />
+		<property name="poolPreparedStatements" value="true" />
 	</bean>
 </beans>
