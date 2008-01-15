@@ -1,7 +1,7 @@
 <project name="log4j-jms-example" default="jar" basedir=".">
 
 	<property name="site" value="log4j-jms-example" />
-	
+
 	<property file="build.properties" />
 
 	<property name="lib.dir" location="lib" />
@@ -10,9 +10,11 @@
 	<property name="base.dir" value="." />
 	<property name="src.dir" value="src" />
 	<property name="src.main.dir" value="${src.dir}/main" />
+	<property name="src.test.dir" value="${src.dir}/test" />
 	<property name="conf.dir" value="conf" />
 	<property name="build.dir" value="build" />
-	<property name="web.dir" value="web" />
+	<property name="build.main.dir" value="${build.dir}/main" />
+	<property name="build.test.dir" value="${build.dir}/test" />
 	<property name="dist.dir" value="dist" />
 	<property name="lib.dir" value="lib" />
 
@@ -40,6 +42,10 @@
 		<fileset dir="${jboss.dir}" includes="*.jar" />
 	</path>
 
+	<path id="junit.classpath">
+		<fileset dir="${junit.dir}" includes="*.jar" />
+	</path>
+
 	<path id="log4j.classpath">
 		<fileset dir="${log4j.dir}" includes="*.jar" />
 	</path>
@@ -55,26 +61,33 @@
 		<path refid="hibernate.classpath" />
 		<path refid="hibernate-annotations.classpath" />
 		<path refid="jboss.classpath" />
+		<path refid="junit.classpath" />
 		<path refid="log4j.classpath" />
 		<path refid="spring.classpath" />
 		<pathelement path="${build.dir}" />
 	</path>
-	
+
 	<target name="prepare">
 		<tstamp />
 		<mkdir dir="${build.dir}" />
+		<mkdir dir="${build.main.dir}" />
+		<mkdir dir="${build.test.dir}" />
 		<mkdir dir="${dist.dir}" />
 	</target>
 
 	<target name="compile" depends="prepare">
-		<javac destdir="${build.dir}" deprecation="on" debug="true">
+		<javac destdir="${build.main.dir}" deprecation="on" debug="true">
 			<classpath refid="build.classpath" />
 			<src path="${src.main.dir}" />
+		</javac>
+		<javac destdir="${build.test.dir}" deprecation="on" debug="true">
+			<classpath refid="build.classpath" />
+			<src path="${src.test.dir}" />
 		</javac>
 	</target>
 
 	<target name="jar" depends="compile">
-		<jar jarfile="${dist.dir}/${site}.jar" basedir="${build.dir}" />
+		<jar jarfile="${dist.dir}/${site}.jar" basedir="${build.main.dir}" />
 	</target>
 
 	<target name="deploy" depends="jar">
@@ -82,7 +95,7 @@
 		<copy file="${conf.dir}/jms-log4j.xml" tofile="${jboss.home}/server/log4j-jms-example/conf/log4j.xml" overwrite="true" />
 		<copy file="${dist.dir}/${site}.jar" todir="${jboss.home}/server/log4j-jms-example/lib" overwrite="true" />
 	</target>
-	
+
 	<target name="undeploy" depends="">
 		<delete file="${jboss.deploy}/context-spring.xml" />
 		<copy file="${conf.dir}/log4j.xml" tofile="${jboss.home}/server/log4j-jms-example/conf/log4j.xml" overwrite="true" />
