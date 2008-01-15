@@ -11,12 +11,20 @@ import javax.mail.internet.MimeMessage.RecipientType;
 import org.apache.log4j.Logger;
 import org.springframework.mail.javamail.JavaMailSender;
 
+/**
+ * This class is used to send notifications about new exceptions
+ * 
+ * @author jbeck
+ */
 public class EmailService implements IEmailService
 {
     private Logger logger = Logger.getLogger(this.getClass());
     
     private JavaMailSender mailSender;
 
+    /**
+     * @see com.beckproduct.service.IEmailService#sendNotification(int, int)
+     */
     public void sendNotification(int nonNotified, int nonReviewed)
     {
         try

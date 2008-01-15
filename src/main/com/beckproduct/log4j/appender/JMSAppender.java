@@ -7,53 +7,35 @@ import javax.jms.QueueConnectionFactory;
 import javax.jms.QueueSender;
 import javax.jms.QueueSession;
 import javax.jms.Session;
-import javax.naming.Context;
-import javax.naming.NameNotFoundException;
-import javax.naming.NamingException;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.helpers.LogLog;
 import org.apache.log4j.spi.LoggingEvent;
 
+/**
+ * This is a new Appender used with Log4J. The JMSAppender that comes with Log4J
+ * only allows the ability to append messages to a Topic rather than a Queue.
+ * This Appender allows for messages to be appended to a Queue (but not a
+ * topic).
+ * 
+ * @author jbeck
+ */
 public class JMSAppender extends AppenderSkeleton
 {
-    boolean delayedActivation;
+    private boolean delayedActivation;
 
-    boolean activated;
-    
-    String brokerURL;
+    private boolean activated;
 
-    QueueConnection queueConnection;
+    private String brokerURL;
 
-    QueueSession queueSession;
+    private QueueConnection queueConnection;
 
-    QueueSender queueSender;
+    private QueueSession queueSession;
 
-    public JMSAppender()
-    {
-    }
+    private QueueSender queueSender;
 
-    public void setDelayedActivation(boolean delayedActivation)
-    {
-        this.delayedActivation = delayedActivation;
-    }
-
-    public boolean getDelayedActivation()
-    {
-        return delayedActivation;
-    }
-    
-    public void setBrokerURL(String brokerURL)
-    {
-        this.brokerURL = brokerURL;
-    }
-    
-    public String getBrokerURL()
-    {
-        return brokerURL;
-    }
-
+    @Override
     public void activateOptions()
     {
         if (!delayedActivation)
@@ -62,7 +44,7 @@ public class JMSAppender extends AppenderSkeleton
         }
     }
 
-    protected void internalActivateOptions()
+    private void internalActivateOptions()
     {
         if (activated)
         {
@@ -79,13 +61,13 @@ public class JMSAppender extends AppenderSkeleton
         {
             queueConnectionFactory = new ActiveMQConnectionFactory(brokerURL);
 
-            LogLog.debug("About to create QueueConnection.");
+            LogLog.debug("Creating QueueConnection.");
             queueConnection = queueConnectionFactory.createQueueConnection();
 
             LogLog.debug("Creating QueueSession, transactional, " + "in AUTO_ACKNOWLEDGE mode.");
             queueSession = queueConnection.createQueueSession(true, Session.SESSION_TRANSACTED);
 
-            LogLog.debug("About to create Queue.");
+            LogLog.debug("Creating Queue.");
             Queue queue = queueSession.createQueue("exceptionQueue");
 
             LogLog.debug("Creating QueueSender.");
@@ -100,20 +82,7 @@ public class JMSAppender extends AppenderSkeleton
         }
     }
 
-    protected Object lookup(Context ctx, String name) throws NamingException
-    {
-        try
-        {
-            return ctx.lookup(name);
-        }
-        catch (NameNotFoundException e)
-        {
-            LogLog.error("Could not find name [" + name + "].", e);
-            throw e;
-        }
-    }
-
-    protected boolean checkEntryConditions(LoggingEvent event)
+    private boolean checkEntryConditions(LoggingEvent event)
     {
         String fail = null;
 
@@ -146,15 +115,9 @@ public class JMSAppender extends AppenderSkeleton
         }
     }
 
-    public synchronized void close()
-    {
-        if (this.closed)
-            return;
-
-        LogLog.debug("Closing appender [" + name + "].");
-        this.closed = true;
-    }
-
+    /**
+     * @see org.apache.log4j.AppenderSkeleton#append(org.apache.log4j.spi.LoggingEvent)
+     */
     public void append(LoggingEvent event)
     {
         if (!checkEntryConditions(event))
@@ -180,8 +143,57 @@ public class JMSAppender extends AppenderSkeleton
         }
     }
 
+    /**
+     * @see org.apache.log4j.AppenderSkeleton#requiresLayout()
+     */
     public boolean requiresLayout()
     {
         return false;
+    }
+
+    /**
+     * @see org.apache.log4j.AppenderSkeleton#close()
+     */
+    public synchronized void close()
+    {
+        if (this.closed)
+            return;
+
+        LogLog.debug("Closing appender [" + name + "].");
+        this.closed = true;
+    }
+
+    /**
+     * @return the delayedActivation
+     */
+    public boolean isDelayedActivation()
+    {
+        return delayedActivation;
+    }
+
+    /**
+     * @param delayedActivation
+     *            the delayedActivation to set
+     */
+    public void setDelayedActivation(boolean delayedActivation)
+    {
+        this.delayedActivation = delayedActivation;
+    }
+
+    /**
+     * @return the brokerURL
+     */
+    public String getBrokerURL()
+    {
+        return brokerURL;
+    }
+
+    /**
+     * @param brokerURL
+     *            the brokerURL to set
+     */
+    public void setBrokerURL(String brokerURL)
+    {
+        this.brokerURL = brokerURL;
     }
 }

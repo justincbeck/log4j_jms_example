@@ -10,6 +10,13 @@ import javax.persistence.Id;
 import org.hibernate.annotations.Entity;
 import org.hibernate.annotations.Table;
 
+/**
+ * Domain object used for persisting Logger.error
+ * and Logger.warn messages to a database.
+ * 
+ * @author jbeck
+ */
+
 @Entity
 @javax.persistence.Entity
 @Table(appliesTo = "logEntry")

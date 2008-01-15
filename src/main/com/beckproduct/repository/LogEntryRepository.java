@@ -9,33 +9,55 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 import com.beckproduct.domain.LogEntry;
 
+/**
+ * This class is used to access the database.  It is
+ * used to persist new LogEntry objects and get
+ * statistics on how many new entries there are.
+ * 
+ * @author jbeck
+ */
 public class LogEntryRepository extends HibernateDaoSupport implements ILogEntryRepository
 {
     private PlatformTransactionManager transactionManager;
 
+    /**
+     * @see com.beckproduct.repository.ILogEntryRepository#create(com.beckproduct.domain.LogEntry)
+     */
     public void create(LogEntry entry)
     {
         getHibernateTemplate().save(entry);
         getHibernateTemplate().flush();
     }
 
+    /**
+     * @see com.beckproduct.repository.ILogEntryRepository#delete(com.beckproduct.domain.LogEntry)
+     */
     public void delete(LogEntry entry)
     {
         getHibernateTemplate().delete(entry);
         getHibernateTemplate().flush();
     }
 
+    /**
+     * @see com.beckproduct.repository.ILogEntryRepository#delete(java.lang.String)
+     */
     public void delete(String id)
     {
         LogEntry entry = this.read(id);
         this.delete(entry);
     }
 
+    /**
+     * @see com.beckproduct.repository.ILogEntryRepository#read(java.lang.String)
+     */
     public LogEntry read(String id)
     {
         return (LogEntry) getHibernateTemplate().get(LogEntry.class, id);
     }
 
+    /**
+     * @see com.beckproduct.repository.ILogEntryRepository#getNonNotifiedCount()
+     */
     public int getNonNotifiedCount()
     {
         HibernateTemplate template = getHibernateTemplate();
@@ -47,6 +69,9 @@ public class LogEntryRepository extends HibernateDaoSupport implements ILogEntry
         return count;
     }
     
+    /**
+     * @see com.beckproduct.repository.ILogEntryRepository#getNonReviewedCount()
+     */
     public int getNonReviewedCount()
     {
         HibernateTemplate template = getHibernateTemplate();
@@ -56,6 +81,9 @@ public class LogEntryRepository extends HibernateDaoSupport implements ILogEntry
         return ((Number) query.uniqueResult()).intValue();
     }
 
+    /**
+     * @see com.beckproduct.repository.ILogEntryRepository#update(com.beckproduct.domain.LogEntry)
+     */
     public void update(LogEntry entry)
     {
         getHibernateTemplate().update(entry);

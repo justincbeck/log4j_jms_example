@@ -7,6 +7,16 @@ import org.apache.log4j.Logger;
 import com.beckproduct.repository.ILogEntryRepository;
 import com.beckproduct.service.IEmailService;
 
+/**
+ * This class checks to see if exceptions are
+ * present in the database.  If exceptions are
+ * present, it sends out email notification
+ * indicating how many non notified (new)
+ * exceptions there are and how many non reviewed
+ * exceptions there are (not new, but not reviewed).
+ * 
+ * @author jbeck
+ */
 public class ExceptionChecker extends DelegateProcessor
 {
     private Logger logger = Logger.getLogger(this.getClass());
