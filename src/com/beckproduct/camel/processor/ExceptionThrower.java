@@ -1,4 +1,4 @@
-package com.beckproduct;
+package com.beckproduct.camel.processor;
 
 import java.util.Random;
 
