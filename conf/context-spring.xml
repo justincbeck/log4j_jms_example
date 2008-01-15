@@ -9,6 +9,28 @@
                                                 http://activemq.apache.org/camel/schema/spring
                                                 http://activemq.apache.org/camel/schema/spring/camel-spring.xsd">
 
+	<!-- Data Sources -->
+	<bean name="meddius-ds"
+		class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost/exceptions?relaxAutoCommit=true"/>
+		<property name="username" value="root" />
+		<property name="password" value="" />
+		<property name="poolPreparedStatements" value="true" />
+	</bean>
+
+	<bean name="activemq-ds"
+		class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost/exceptions_jms?relaxAutoCommit=true"/>
+		<property name="username" value="root" />
+		<property name="password" value="" />
+		<property name="poolPreparedStatements" value="true" />
+	</bean>
+
+	<!-- Camel routes -->
 	<camelContext id="camelQuartz"
 		xmlns="http://activemq.apache.org/camel/schema/spring">
 		<route>
@@ -21,20 +43,7 @@
 		</route>
 	</camelContext>
 
-	<bean id="dataSource"
-		class="org.springframework.jndi.JndiObjectFactoryBean">
-		<property name="jndiName">
-			<value>java:/test-DS</value>
-		</property>
-	</bean>
-
-	<bean id="jmsDataSource"
-		class="org.springframework.jndi.JndiObjectFactoryBean">
-		<property name="jndiName">
-			<value>java:/mysql-DS</value>
-		</property>
-	</bean>
-
+	<!-- POJOs -->
 	<bean id="exceptionThrower"
 		class="com.beckproduct.camel.processor.ExceptionThrower" />
 
@@ -48,6 +57,35 @@
 		</property>
 	</bean>
 
+	<bean id="exceptionListener"
+		class="com.beckproduct.jms.listener.ExceptionListenerImpl">
+		<property name="repository">
+			<ref local="logEntryRepository" />
+		</property>
+	</bean>
+
+	<bean id="logEntryRepository"
+		class="com.beckproduct.repository.LogEntryRepository">
+		<property name="sessionFactory">
+			<ref local="annotationSessionFactoryBean" />
+		</property>
+	</bean>
+
+	<bean id="emailService"
+		class="com.beckproduct.service.EmailService">
+		<property name="mailSender">
+			<ref bean="mailSender" />
+		</property>
+	</bean>
+
+	<bean id="mailSender"
+		class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host">
+			<value>localhost</value>
+		</property>
+	</bean>
+
+	<!-- Hibernate -->
 	<bean id="autoProxyCreator"
 		class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
 		<property name="interceptorNames">
@@ -86,7 +124,7 @@
 	<bean id="annotationSessionFactoryBean"
 		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
 		<property name="dataSource">
-			<ref bean="dataSource" />
+			<ref bean="meddius-ds" />
 		</property>
 		<property name="hibernateProperties">
 			<props>
@@ -104,34 +142,7 @@
 		</property>
 	</bean>
 
-	<bean id="exceptionListener"
-		class="com.beckproduct.jms.listener.ExceptionListenerImpl">
-		<property name="repository">
-			<ref local="logEntryRepository" />
-		</property>
-	</bean>
-
-	<bean id="logEntryRepository"
-		class="com.beckproduct.repository.LogEntryRepository">
-		<property name="sessionFactory">
-			<ref local="annotationSessionFactoryBean" />
-		</property>
-	</bean>
-
-	<bean id="emailService"
-		class="com.beckproduct.service.EmailService">
-		<property name="mailSender">
-			<ref bean="mailSender" />
-		</property>
-	</bean>
-
-	<bean id="mailSender"
-		class="org.springframework.mail.javamail.JavaMailSenderImpl">
-		<property name="host">
-			<value>localhost</value>
-		</property>
-	</bean>
-
+	<!-- ActiveMQ -->
 	<bean id="exceptionQueue"
 		class="org.apache.activemq.command.ActiveMQQueue">
 		<constructor-arg>
@@ -168,40 +179,12 @@
 
 	<bean name="persistenceAdapter"
 		class="org.apache.activemq.store.PersistenceAdapterFactoryBean">
-		<property name="dataSource" ref="jmsDataSource" />
+		<property name="dataSource" ref="activemq-ds" />
 		<property name="createTablesOnStartup" value="true" />
 		<property name="dataDirectory">
 			<value>../active-mq/test</value>
 		</property>
 		<property name="journalLogFiles" value="5" />
 		<property name="useDatabaseLock" value="false" />
-	</bean>
-
-	<bean name="meddius-ds"
-		class="org.apache.commons.dbcp.BasicDataSource"
-		destroy-method="close">
-		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url">
-			<value>
-				jdbc:mysql://localhost/exceptions?relaxAutoCommit=true
-			</value>
-		</property>
-		<property name="username" value="root" />
-		<property name="password" value="" />
-		<property name="poolPreparedStatements" value="true" />
-	</bean>
-
-	<bean name="activemq-ds"
-		class="org.apache.commons.dbcp.BasicDataSource"
-		destroy-method="close">
-		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url">
-			<value>
-				jdbc:mysql://localhost/exceptions_jms?relaxAutoCommit=true
-			</value>
-		</property>
-		<property name="username" value="root" />
-		<property name="password" value="" />
-		<property name="poolPreparedStatements" value="true" />
 	</bean>
 </beans>
