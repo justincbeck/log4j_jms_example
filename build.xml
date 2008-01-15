@@ -35,6 +35,10 @@
 		<fileset dir="${hibernate-annotations.dir}" includes="*.jar" />
 	</path>
 
+	<path id="jboss.classpath">
+		<fileset dir="${jboss.dir}" includes="*.jar" />
+	</path>
+
 	<path id="log4j.classpath">
 		<fileset dir="${log4j.dir}" includes="*.jar" />
 	</path>
@@ -49,6 +53,7 @@
 		<path refid="commons-lang.classpath" />
 		<path refid="hibernate.classpath" />
 		<path refid="hibernate-annotations.classpath" />
+		<path refid="jboss.classpath" />
 		<path refid="log4j.classpath" />
 		<path refid="spring.classpath" />
 		<pathelement path="${build.dir}" />

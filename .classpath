@@ -24,5 +24,6 @@
 	<classpathentry kind="lib" path="lib/hibernate-3.2.3/lib/odmg-3.0.jar"/>
 	<classpathentry kind="lib" path="lib/hibernate-3.2.3/lib/oscache-2.1.jar"/>
 	<classpathentry kind="lib" path="lib/commons-lang-2.3/lib/commons-lang-2.3.jar"/>
+	<classpathentry kind="lib" path="lib/jboss-4.0.5.GA/lib/mail.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
