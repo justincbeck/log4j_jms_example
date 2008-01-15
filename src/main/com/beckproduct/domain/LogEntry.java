@@ -33,6 +33,9 @@ public class LogEntry
     @Column(name = "hostName", nullable = false, updatable = false, insertable = true, columnDefinition = "VARCHAR(50)")
     private String hostName;
     
+    @Column(name = "message", nullable = false, updatable = false, insertable = true, columnDefinition = "TEXT")
+    private String message;
+    
     @Column(name = "stacktrace", nullable = true, updatable = false, insertable = true, columnDefinition = "TEXT")
     private String stacktrace;
     
@@ -155,5 +158,21 @@ public class LogEntry
     public void setNotified(boolean notified)
     {
         this.notified = notified;
+    }
+
+    /**
+     * @return the message
+     */
+    public String getMessage()
+    {
+        return message;
+    }
+
+    /**
+     * @param message the message to set
+     */
+    public void setMessage(String message)
+    {
+        this.message = message;
     }
 }
