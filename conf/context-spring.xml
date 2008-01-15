@@ -43,6 +43,9 @@
 		<property name="repository">
 			<ref local="logEntryRepository" />
 		</property>
+		<property name="service">
+			<ref local="emailService" />
+		</property>
 	</bean>
 
 	<bean id="autoProxyCreator"
@@ -91,7 +94,7 @@
 					org.hibernate.dialect.MySQLDialect
 				</prop>
 				<prop key="hibernate.hbm2ddl.auto">update</prop>
-				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.show_sql">false</prop>
 			</props>
 		</property>
 		<property name="annotatedClasses">
@@ -112,6 +115,20 @@
 		class="com.beckproduct.repository.LogEntryRepository">
 		<property name="sessionFactory">
 			<ref local="annotationSessionFactoryBean" />
+		</property>
+	</bean>
+
+	<bean id="emailService"
+		class="com.beckproduct.service.EmailService">
+		<property name="mailSender">
+			<ref bean="mailSender" />
+		</property>
+	</bean>
+
+	<bean id="mailSender"
+		class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host">
+			<value>localhost</value>
 		</property>
 	</bean>
 
