@@ -8,6 +8,10 @@ public interface ILogEntryRepository
     
     public LogEntry read(String id);
     
+    public int getNonNotifiedCount();
+    
+    public int getNonReviewedCount();
+    
     public void update(LogEntry entry);
     
     public void delete(LogEntry entry);
