@@ -63,8 +63,8 @@ public class LogEntryRepository extends HibernateDaoSupport implements ILogEntry
         HibernateTemplate template = getHibernateTemplate();
         Session session = SessionFactoryUtils.getSession(template.getSessionFactory(), true);
         
-        int count = ((Number) session.createQuery("select count(*) from LogEntry le where le.notified = '0'").uniqueResult()).intValue();
-        session.createSQLQuery("update LogEntry set notified = '1'").executeUpdate();
+        int count = ((Number) session.createSQLQuery("select count(*) from log_entry le where le.notified = '0'").uniqueResult()).intValue();
+        session.createSQLQuery("update log_entry le set le.notified = '1' where le.notified = '0'").executeUpdate();
 
         return count;
     }
@@ -77,7 +77,7 @@ public class LogEntryRepository extends HibernateDaoSupport implements ILogEntry
         HibernateTemplate template = getHibernateTemplate();
         Session session = SessionFactoryUtils.getSession(template.getSessionFactory(), true);
         
-        Query query = session.createQuery("select count(*) from LogEntry le where le.reviewed = '0'");
+        Query query = session.createSQLQuery("select count(*) from log_entry le where le.reviewed = '0'");
         return ((Number) query.uniqueResult()).intValue();
     }
 
