@@ -1,15 +1,17 @@
 package com.beckproduct.log4j.appender;
 
-import javax.jms.ObjectMessage;
-import javax.jms.Queue;
+import javax.jms.Destination;
+import javax.jms.JMSException;
+import javax.jms.MessageProducer;
 import javax.jms.QueueConnection;
 import javax.jms.QueueConnectionFactory;
-import javax.jms.QueueSender;
 import javax.jms.QueueSession;
 import javax.jms.Session;
 
+import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.log4j.AppenderSkeleton;
+import org.apache.log4j.Logger;
 import org.apache.log4j.helpers.LogLog;
 import org.apache.log4j.spi.LoggingEvent;
 
@@ -28,61 +30,46 @@ public class JMSAppender extends AppenderSkeleton
     private boolean activated;
 
     private String brokerURL;
+    
+    private String queueName;
 
     private QueueConnection queueConnection;
-
-    private QueueSession queueSession;
-
-    private QueueSender queueSender;
+    
+    private Logger logger = Logger.getLogger(this.getClass());
 
     @Override
     public void activateOptions()
     {
         if (!delayedActivation)
         {
-            internalActivateOptions();
+            this.internalActivateOptions();
         }
     }
-
+    
     private void internalActivateOptions()
     {
         if (activated)
         {
             return;
         }
-        else
-        {
-            activated = true;
-        }
-
         QueueConnectionFactory queueConnectionFactory;
 
         try
         {
             queueConnectionFactory = new ActiveMQConnectionFactory(brokerURL);
 
-            LogLog.debug("Creating QueueConnection.");
-            queueConnection = queueConnectionFactory.createQueueConnection();
+            logger.info("Creating QueueConnection.");
+            queueConnection = (ActiveMQConnection) queueConnectionFactory.createConnection();
 
-            LogLog.debug("Creating QueueSession, transactional, " + "in AUTO_ACKNOWLEDGE mode.");
-            queueSession = queueConnection.createQueueSession(true, Session.SESSION_TRANSACTED);
-
-            LogLog.debug("Creating Queue.");
-            Queue queue = queueSession.createQueue("exceptionQueue");
-
-            LogLog.debug("Creating QueueSender.");
-            queueSender = queueSession.createSender(queue);
-
-            LogLog.debug("Starting QueueConnection.");
-            queueConnection.start();
+            activated = true;
         }
-        catch (Exception e)
+        catch (JMSException e)
         {
             LogLog.error("Error while activating options for appender named [" + name + "].", e);
         }
     }
 
-    private boolean checkEntryConditions(LoggingEvent event)
+    private boolean checkEntryConditions()
     {
         String fail = null;
 
@@ -95,18 +82,10 @@ public class JMSAppender extends AppenderSkeleton
         {
             fail = "No QueueConnection";
         }
-        else if (this.queueSession == null)
-        {
-            fail = "No QueueSession";
-        }
-        else if (this.queueSender == null)
-        {
-            fail = "No QueueSender";
-        }
 
         if (fail != null)
         {
-            LogLog.error(fail + " for JMSAppender named [" + name + "].");
+            logger.info(fail + " for JMSAppender named [" + name + "].");
             return false;
         }
         else
@@ -120,26 +99,35 @@ public class JMSAppender extends AppenderSkeleton
      */
     public void append(LoggingEvent event)
     {
-        if (!checkEntryConditions(event))
+        if (!checkEntryConditions())
         {
             return;
         }
-
+        
         try
         {
-            LogLog.debug("About to send message!");
+            logger.info("About to send message!");
+            
+            logger.info("Creating QueueSession, non-transactional, " + "in AUTO_ACKNOWLEDGE mode.");
+            QueueSession queueSession = (QueueSession) queueConnection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+            
+            logger.info("Creating Destination.");
+            Destination destination = queueSession.createQueue(queueName);
 
-            ObjectMessage msg = queueSession.createObjectMessage();
-            msg.setObject(event);
+            logger.info("Creating Producer.");
+            MessageProducer producer = queueSession.createProducer(destination);
+            
+            logger.info("Sending Message.");
+            producer.send(queueSession.createObjectMessage(event));
+            
+            logger.info("Closing Session.");
+            queueSession.close();
 
-            queueSender.send(msg);
-            queueSession.commit();
-
-            LogLog.debug("Message sent!");
+            logger.info("Message sent!");
         }
         catch (Exception e)
         {
-            LogLog.error("Could not publish message in JMSAppender [" + name + "].", e);
+            logger.info("Could not publish message in JMSAppender [" + name + "].", e);
         }
     }
 
@@ -159,7 +147,7 @@ public class JMSAppender extends AppenderSkeleton
         if (this.closed)
             return;
 
-        LogLog.debug("Closing appender [" + name + "].");
+        logger.info("Closing appender [" + name + "].");
         this.closed = true;
     }
 
@@ -195,5 +183,21 @@ public class JMSAppender extends AppenderSkeleton
     public void setBrokerURL(String brokerURL)
     {
         this.brokerURL = brokerURL;
+    }
+
+    /**
+     * @return the queueName
+     */
+    public String getQueueName()
+    {
+        return queueName;
+    }
+
+    /**
+     * @param queueName the queueName to set
+     */
+    public void setQueueName(String queueName)
+    {
+        this.queueName = queueName;
     }
 }
