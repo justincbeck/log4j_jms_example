@@ -34,7 +34,7 @@ public class EmailService implements IEmailService
 
             MimeMessage message = mailSender.createMimeMessage();
 
-            message.setSubject("Meddius: Exception Notification!");
+            message.setSubject("Exception Notification!");
             message.setFrom(sender);
             message.setRecipient(RecipientType.TO, recipient);
             message.setSentDate(new Date());
