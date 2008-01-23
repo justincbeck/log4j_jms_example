@@ -29,7 +29,7 @@ public class EmailService implements IEmailService
     {
         try
         {
-            InternetAddress sender = new InternetAddress("nobody@nowhere.com");
+            InternetAddress sender = new InternetAddress("justinbeck@mac.com");
             InternetAddress recipient = new InternetAddress("justinbeck@mac.com");
 
             MimeMessage message = mailSender.createMimeMessage();
