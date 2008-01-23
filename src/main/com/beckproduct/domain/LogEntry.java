@@ -3,12 +3,12 @@ package com.beckproduct.domain;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
-import org.hibernate.annotations.Entity;
-import org.hibernate.annotations.Table;
 
 /**
  * Domain object used for persisting Logger.error
@@ -18,8 +18,7 @@ import org.hibernate.annotations.Table;
  */
 
 @Entity
-@javax.persistence.Entity
-@Table(appliesTo = "logEntry")
+@Table(name = "log_entry")
 public class LogEntry
 {
     @Id
@@ -27,10 +26,10 @@ public class LogEntry
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     
-    @Column(name = "logLevel", nullable = false, updatable = false, insertable = true, columnDefinition = "VARCHAR(10)")
+    @Column(name = "log_level", nullable = false, updatable = false, insertable = true, columnDefinition = "VARCHAR(10)")
     private String logLevel;
     
-    @Column(name = "hostName", nullable = false, updatable = false, insertable = true, columnDefinition = "VARCHAR(50)")
+    @Column(name = "host_name", nullable = false, updatable = false, insertable = true, columnDefinition = "VARCHAR(50)")
     private String hostName;
     
     @Column(name = "message", nullable = false, updatable = false, insertable = true, columnDefinition = "TEXT")
