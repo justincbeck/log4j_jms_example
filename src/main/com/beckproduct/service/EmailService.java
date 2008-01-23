@@ -29,8 +29,8 @@ public class EmailService implements IEmailService
     {
         try
         {
-            InternetAddress sender = new InternetAddress("exceptions@meddius.com");
-            InternetAddress recipient = new InternetAddress("justin.beck@intalgent.com");
+            InternetAddress sender = new InternetAddress("nobody@nowhere.com");
+            InternetAddress recipient = new InternetAddress("justinbeck@mac.com");
 
             MimeMessage message = mailSender.createMimeMessage();
 
