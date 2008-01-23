@@ -10,21 +10,21 @@
                                                 http://activemq.apache.org/camel/schema/spring/camel-spring.xsd">
 
 	<!-- Data Sources -->
-	<bean name="meddius-ds"
+	<bean name="queue_appender-ds"
 		class="org.apache.commons.dbcp.BasicDataSource"
 		destroy-method="close">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://localhost/exceptions?relaxAutoCommit=true"/>
+		<property name="url" value="jdbc:mysql://localhost/queue_appender?relaxAutoCommit=true"/>
 		<property name="username" value="root" />
 		<property name="password" value="" />
 		<property name="poolPreparedStatements" value="true" />
 	</bean>
 
-	<bean name="activemq-ds"
+	<bean name="queue_appender_jms-ds"
 		class="org.apache.commons.dbcp.BasicDataSource"
 		destroy-method="close">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://localhost/exceptions_jms?relaxAutoCommit=true"/>
+		<property name="url" value="jdbc:mysql://localhost/queue_appender_jms?relaxAutoCommit=true"/>
 		<property name="username" value="root" />
 		<property name="password" value="" />
 		<property name="poolPreparedStatements" value="true" />
@@ -124,7 +124,7 @@
 	<bean id="annotationSessionFactoryBean"
 		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
 		<property name="dataSource">
-			<ref bean="meddius-ds" />
+			<ref bean="queue_appender-ds" />
 		</property>
 		<property name="hibernateProperties">
 			<props>
@@ -132,7 +132,7 @@
 					org.hibernate.dialect.MySQLDialect
 				</prop>
 				<prop key="hibernate.hbm2ddl.auto">update</prop>
-				<prop key="hibernate.show_sql">false</prop>
+				<prop key="hibernate.show_sql">true</prop>
 			</props>
 		</property>
 		<property name="annotatedClasses">
@@ -153,7 +153,7 @@
 	<bean id="connectionFactory"
 		class="org.apache.activemq.spring.ActiveMQConnectionFactory">
 		<property name="brokerURL">
-			<value>tcp://fest.local:6969</value>
+			<value>tcp://fest.local:9000</value>
 		</property>
 	</bean>
 
@@ -171,7 +171,7 @@
 		<property name="useJmx" value="false" />
 		<property name="transportConnectorURIs">
 			<list>
-				<value>tcp://fest.local:6969</value>
+				<value>tcp://fest.local:9000</value>
 			</list>
 		</property>
 		<property name="persistenceAdapter" ref="persistenceAdapter" />
@@ -179,7 +179,7 @@
 
 	<bean name="persistenceAdapter"
 		class="org.apache.activemq.store.PersistenceAdapterFactoryBean">
-		<property name="dataSource" ref="activemq-ds" />
+		<property name="dataSource" ref="queue_appender_jms-ds" />
 		<property name="createTablesOnStartup" value="true" />
 		<property name="dataDirectory">
 			<value>../active-mq/test</value>
