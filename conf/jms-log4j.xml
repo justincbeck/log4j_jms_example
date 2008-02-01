@@ -260,7 +260,11 @@
      <priority value="INFO" />
      <appender-ref ref="TRAP_LOG"/>
    </category>
-  
+   
+   <category name="com.beckproduct.logger">
+      <level value="DEBUG" />
+     <appender-ref ref="CONSOLE"/>
+   </category>
    -->
 
    <!-- ======================= -->
