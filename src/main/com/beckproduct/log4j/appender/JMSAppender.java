@@ -58,14 +58,14 @@ public class JMSAppender extends AppenderSkeleton
         {
             queueConnectionFactory = new ActiveMQConnectionFactory(brokerURL);
 
-            logger.info("Creating QueueConnection.");
+            logger.debug("Creating QueueConnection.");
             queueConnection = (ActiveMQConnection) queueConnectionFactory.createConnection();
 
             activated = true;
         }
         catch (JMSException e)
         {
-            LogLog.error("Error while activating options for appender named [" + name + "].", e);
+            logger.error("Error while activating options for appender named [" + name + "].", e);
         }
     }
 
@@ -85,7 +85,7 @@ public class JMSAppender extends AppenderSkeleton
 
         if (fail != null)
         {
-            logger.info(fail + " for JMSAppender named [" + name + "].");
+            logger.error(fail + " for JMSAppender named [" + name + "].");
             return false;
         }
         else
@@ -106,28 +106,28 @@ public class JMSAppender extends AppenderSkeleton
         
         try
         {
-            logger.info("About to send message!");
+            logger.debug("About to send message!");
             
-            logger.info("Creating QueueSession, non-transactional, " + "in AUTO_ACKNOWLEDGE mode.");
+            logger.debug("Creating QueueSession, non-transactional, " + "in AUTO_ACKNOWLEDGE mode.");
             QueueSession queueSession = (QueueSession) queueConnection.createSession(false, Session.AUTO_ACKNOWLEDGE);
             
-            logger.info("Creating Destination.");
+            logger.debug("Creating Destination.");
             Destination destination = queueSession.createQueue(queueName);
 
-            logger.info("Creating Producer.");
+            logger.debug("Creating Producer.");
             MessageProducer producer = queueSession.createProducer(destination);
             
-            logger.info("Sending Message.");
+            logger.debug("Sending Message.");
             producer.send(queueSession.createObjectMessage(event));
             
-            logger.info("Closing Session.");
+            logger.debug("Closing Session.");
             queueSession.close();
 
-            logger.info("Message sent!");
+            logger.debug("Message sent!");
         }
         catch (Exception e)
         {
-            logger.info("Could not publish message in JMSAppender [" + name + "].", e);
+            logger.debug("Could not publish message in JMSAppender [" + name + "].", e);
         }
     }
 
@@ -147,7 +147,7 @@ public class JMSAppender extends AppenderSkeleton
         if (this.closed)
             return;
 
-        logger.info("Closing appender [" + name + "].");
+        logger.debug("Closing appender [" + name + "].");
         this.closed = true;
     }
 
